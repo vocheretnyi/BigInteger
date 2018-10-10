@@ -1,18 +1,19 @@
 # BigInteger
-BigInteger library for C++
 
 * [Description](#description)   
 * [Operators](#operators)
   * [Addition](#addition)
   * [Subtraction](#subtraction)
   * [Multiplication](#multiplication)
+  * [Dividing](#dividing)
   * [Comparison](#comparison)
   * [Streaming operators](#streaming-operators)
 * [Methods](#methods)
-  * [to_string](#to_stringBigInteger)
+  * [to_string](#to_string)
 * [Functions](#functions)
-  * [abs](#absBigInteger)
-  * [pow](#powint)
+  * [abs](#abs)
+  * [pow](#pow)
+  * [sqrt](#sqrt)
   
 
 # Description
@@ -42,6 +43,18 @@ c = a * b;
 c *= a;
 c = a * 6;
 c *= 6;
+```
+## Dividing
+```C++
+BigIntegerLibrary::BigInteger a, b, c;
+c = a / b;
+c /= a;
+c = a / 6;
+c /= 6;
+c = a % b;
+c %= a;
+c = a % 6;
+c %= 6;
 ```
 ## Comparison
 ```C++
@@ -78,6 +91,12 @@ cout << abs(a); // 152
 ## pow(BigInteger, long long)
 Raises to the power of N.
 ```C++
-Dodecahedron::Bigint a = 19;
+BigIntegerLibrary::BigIntegert a = 19;
 cout << pow(a, 87); // ~1.784e+111
+```
+## sqrt(BigInteger)
+Return the int part of squared root.
+```C++
+BigIntegerLibrary::BigInteger a = 120;
+cout << sqrt(a); // [~10.954] = 10
 ```
