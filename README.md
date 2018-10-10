@@ -11,9 +11,9 @@
 * [Methods](#methods)
   * [to_string](#to_string)
 * [Functions](#functions)
-  * [abs](#abs)
-  * [pow](#pow)
-  * [sqrt](#sqrt)
+  * [abs](#absbiginteger)
+  * [pow](#powbiginteger-long-long)
+  * [sqrt](#sqrtbiginteger)
   
 
 # Description
