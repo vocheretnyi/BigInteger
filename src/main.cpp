@@ -14,9 +14,9 @@ using namespace std;
 using namespace BigIntegerLibrary;
 
 int main() {
-    BigInteger a(0);
-    cin >> a;
-    cout << abs(a);
+    BigInteger a, b;
+    cin >> a >> b;
+    cout << a + b;
     
     return 0;
 }

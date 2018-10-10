@@ -8,6 +8,8 @@ namespace BigIntegerLibrary {
 
 // Constructors
 
+    BigInteger::BigInteger() : BigInteger(0) {}
+
     BigInteger::BigInteger(long long number) : BigInteger(::to_string(number)) {}
 
     BigInteger::BigInteger(string number) {
@@ -29,12 +31,12 @@ namespace BigIntegerLibrary {
         }
     }
 
-    BigInteger::BigInteger(const BigInteger &other) {
+    BigInteger::BigInteger(const BigInteger& other) {
         isNegative = other.isNegative;
         num = other.num;
     }
 
-    BigInteger &BigInteger::operator=(const BigInteger &other) {
+    BigInteger& BigInteger::operator=(const BigInteger& other) {
         if (this != &other) {
             isNegative = other.isNegative;
             num = other.num;
@@ -45,14 +47,14 @@ namespace BigIntegerLibrary {
 
 // Input & Output
 
-    istream &operator>>(istream &in, BigInteger &a) {
+    istream& operator>>(istream& in, BigInteger& a) {
         string s;
         in >> s;
         a = BigInteger(s);
         return in;
     }
 
-    ostream &operator<<(ostream &out, const BigInteger &a) {
+    ostream& operator<<(ostream& out, const BigInteger& a) {
         out << a.to_string();
         return out;
     }
@@ -60,99 +62,92 @@ namespace BigIntegerLibrary {
 
 // Adding
 
-    BigInteger BigInteger::operator+(const BigInteger &other) const {
-        BigInteger res(*this);
-        res += other;
-        return res;
+    BigInteger BigInteger::operator+(const BigInteger& b) const {
+        BigInteger a(*this);
+        if (!a.isNegative && b.isNegative) { // + -
+            return a - (-b);
+        }
+        if (a.isNegative && !b.isNegative) { // - +
+            return b - (-a);
+        }
+        if (a.isNegative && b.isNegative) { // - -
+            return -((-a) + (-b));
+        }
+        int carry = 0;
+        vector<int>::iterator it1 = a.num.begin();
+        vector<int>::const_iterator it2 = b.num.cbegin();
+
+        for (; it1 != a.num.end() || it2 != b.num.cend() || carry; ++it1) {
+            if (it1 == a.num.end()) {
+                a.num.push_back(0);
+                it1 = a.num.end() - 1;
+            }
+            *it1 += carry + (it2 != b.num.cend() ? *(it2++) : 0);
+            carry = *it1 >= base;
+            if (carry) {
+                *it1 -= base;
+            }
+        }
+        return a;
     }
 
     BigInteger BigInteger::operator+(long long x) const {
         return *this + BigInteger(x);
     }
 
-    BigInteger &BigInteger::operator+=(const BigInteger &other) {
-        if (!isNegative && other.isNegative) { // + -
-            return *this -= -other;
-        }
-        if (isNegative && !other.isNegative) { // - +
-            return *this = other - -(*this);
-        }
-        if (isNegative && other.isNegative) { // - -
-
-            *this = -((-(*this)) + (-other));
-            return *this;
-        }
-        int carry = 0;
-        vector<int>::iterator it1 = num.begin();
-        vector<int>::const_iterator it2 = other.num.cbegin();
-
-        for (; it1 != num.end() || it2 != other.num.cend() || carry; ++it1) {
-            if (it1 == num.end()) {
-                num.push_back(0);
-                it1 = num.end() - 1;
-            }
-            *it1 += carry + (it2 != other.num.cend() ? *(it2++) : 0);
-            carry = *it1 >= base;
-            if (carry) {
-                *it1 -= base;
-            }
-        }
-        return *this;
+    BigInteger& BigInteger::operator+=(const BigInteger& other) {
+        return *this = *this + other;
     }
 
-    BigInteger &BigInteger::operator+=(long long x) {
-        (*this) += BigInteger(x);
-        return *this;
+    BigInteger& BigInteger::operator+=(long long x) {
+        return *this = *this + BigInteger(x);
     }
 
 
 // Subtraction
 
-    BigInteger BigInteger::operator-(const BigInteger &other) const {
-        BigInteger res(*this);
-        res -= other;
-        return res;
+    BigInteger BigInteger::operator-(const BigInteger& b) const {
+        BigInteger a(*this);
+        if (!a.isNegative && b.isNegative) { // + -
+            return a + (-b);
+        }
+        if (a.isNegative && !b.isNegative) { // - +
+            return -((-a) + b);
+        }
+        if (a.isNegative && b.isNegative) { // - -
+            return a + (-b);
+        }
+        if (b > a) {
+            return -(b - a);
+        }
 
+        int carry = 0;
+
+        int b_len = b.num.size();
+        for (int i = 0; i < b_len || carry; ++i) {
+            a.num[i] -= carry + (i < b_len ? b.num[i] : 0);
+            carry = a.num[i] < 0;
+            if (carry) {
+                a.num[i] += base;
+            }
+        }
+        while (a.num.size() > 1 && a.num.back() == 0) {
+            a.num.pop_back();
+        }
+
+        return a;
     }
 
     BigInteger BigInteger::operator-(long long other) const {
         return *this - BigInteger(other);
     }
 
-    BigInteger &BigInteger::operator-=(const BigInteger &other) {
-        if (!isNegative && other.isNegative) { // + -
-            return *this = *this + (-other);
-        }
-        if (isNegative && !other.isNegative) { // - +
-            *this = -((-(*this)) + (other));
-            return *this;
-        }
-        if (isNegative && other.isNegative) { // - -
-            return *this = (*this) + (-other);
-        }
-        if (other > *this) {
-            return *this = -(other - (*this));
-        }
-        int carry = 0;
-
-        int other_len = other.num.size();
-        for (int i = 0; i < other_len || carry; ++i) {
-            num[i] -= carry + (i < other_len ? other.num[i] : 0);
-            carry = num[i] < 0;
-            if (carry) {
-                num[i] += base;
-            }
-        }
-        while (num.size() > 1 && num.back() == 0) {
-            num.pop_back();
-        }
-
-        return *this;
+    BigInteger& BigInteger::operator-=(const BigInteger& other) {
+        return *this = *this - other;
     }
 
-    BigInteger &BigInteger::operator-=(long long other) {
-        *this -= BigInteger(other);
-        return *this;
+    BigInteger& BigInteger::operator-=(long long other) {
+        return *this = *this - BigInteger(other);
     }
 
     BigInteger BigInteger::operator-() const {
@@ -160,6 +155,133 @@ namespace BigIntegerLibrary {
         res.isNegative ^= true;
         return res;
     }
+    
+// Multiplication
+
+    BigInteger BigInteger::operator*(const BigInteger& other) const {
+        BigInteger res;
+        int len_a = num.size();
+        int len_b = other.num.size();
+        res.isNegative = isNegative ^ other.isNegative;
+        res.num.resize(len_a + len_b);
+        for (int i = 0; i < len_a; ++i) {
+            for (int j = 0, carry = 0; j < len_b || carry; ++j) {
+                long long cur = res.num[i + j] + num[i] * 1LL * (j < len_b ? other.num[j] : 0) + carry;
+                res.num[i + j] = int(cur % base);
+                carry = int(cur / base);
+            }
+        }
+        while (res.num.size() > 1 && res.num.back() == 0) {
+            res.num.pop_back();
+        }
+        return res;
+    }
+
+    BigInteger BigInteger::operator*(long long other) const {
+        return *this * BigInteger(other);
+    }
+
+    BigInteger& BigInteger::operator*=(const BigInteger& other) {
+        return *this = *this * other;
+    }
+
+    BigInteger& BigInteger::operator*=(long long other) {
+        return *this = *this * BigInteger(other);
+    }
+
+// Dividing
+
+    BigInteger BigInteger::operator/(int other) const {
+        BigInteger res(*this);
+        int carry = 0;
+        for (int i = (int) num.size() - 1; i >= 0; --i) {
+            long long cur = res.num[i] + carry * 1LL * base;
+            res.num[i] = int(cur / other);
+            carry = int(cur % other);
+        }
+        while (res.num.size() > 1 && res.num.back() == 0) {
+            res.num.pop_back();
+        }
+        return res;
+    }
+
+    BigInteger& BigInteger::operator/=(int other) {
+        return *this = *this / other;
+    }
+
+    BigInteger BigInteger::operator/(const BigInteger& other) const {
+        BigInteger a(*this);
+        a.isNegative = false;
+        BigInteger b(other);
+        b.isNegative = false;
+
+        BigInteger l(0);
+        BigInteger r(a);
+        bool sign = isNegative ^other.isNegative;
+        while (r - l > 1) {
+            BigInteger mid = (l + r) / 2;
+            if (mid * b <= a) {
+                l = mid;
+            } else {
+                r = mid - 1;
+            }
+        }
+        if (r * b <= a) {
+            l = r;
+        }
+        l.isNegative = sign;
+        return l;
+    }
+
+    BigInteger& BigInteger::operator/=(const BigInteger& other) {
+        return *this = *this / other;
+    }
+
+    BigInteger BigInteger::operator%(int other) const {
+        return *this - ((*this / other) * other);
+    }
+
+    BigInteger& BigInteger::operator%=(int other) {
+        return *this = *this % other;
+    }
+
+    BigInteger BigInteger::operator%(const BigInteger& other) const {
+        return *this - ((*this / other) * other);
+    }
+
+    BigInteger& BigInteger::operator%=(const BigInteger& other) {
+        return *this = *this % other;
+    }
+
+// Compare
+
+    bool BigInteger::operator>(const BigInteger& other) const {
+        return compare(other) == 1;
+    }
+
+    bool BigInteger::operator<(const BigInteger& other) const {
+        return compare(other) == -1;
+    }
+
+    bool BigInteger::operator<=(const BigInteger& other) const {
+        int compared = compare(other);
+        return compared == 0 || compared == -1;
+    }
+
+    bool BigInteger::operator>=(const BigInteger& other) const {
+        int compared = compare(other);
+        return compared == 0 || compared == 1;
+    }
+
+    bool BigInteger::operator==(const BigInteger& other) const {
+        return compare(other) == 0;
+    }
+
+    bool BigInteger::operator!=(const BigInteger& other) const {
+        return compare(other) != 0;
+    }
+
+// Other methods
 
     string BigInteger::to_string() const {
         ostringstream out;
@@ -183,133 +305,45 @@ namespace BigIntegerLibrary {
         return out.str();
     }
 
-    BigInteger BigInteger::operator*(const BigInteger &other) const {
-        BigInteger res = BigInteger(0);
-        int len_a = num.size();
-        int len_b = other.num.size();
-        res.isNegative = isNegative ^ other.isNegative;
-        res.num.resize(len_a + len_b);
-        for (int i = 0; i < len_a; ++i) {
-            for (int j = 0, carry = 0; j < len_b || carry; ++j) {
-                long long cur = res.num[i + j] + num[i] * 1LL * (j < len_b ? other.num[j] : 0) + carry;
-                res.num[i + j] = int(cur % base);
-                carry = int(cur / base);
-            }
-        }
-        while (res.num.size() > 1 && res.num.back() == 0) {
-            res.num.pop_back();
-        }
-        return res;
-    }
-
-    BigInteger BigInteger::operator*(long long other) const {
-        BigInteger res(*this);
-        return res * BigInteger(other);
-    }
-
-    BigInteger &BigInteger::operator*=(const BigInteger &other) {
-        *this = *this * other;
-        return *this;
-    }
-
-    BigInteger &BigInteger::operator*=(long long b) {
-        *this = *this * BigInteger(b);
-        return *this;
-    }
-
-    bool BigInteger::operator>(const BigInteger &other) const {
-        return compare(other) == 1;
-    }
-
-    bool BigInteger::operator<(const BigInteger &other) const {
-        return compare(other) == -1;
-    }
-
-    bool BigInteger::operator<=(const BigInteger &other) const {
-        int compared = compare(other);
-        return compared == 0 || compared == -1;
-    }
-
-    bool BigInteger::operator>=(const BigInteger &other) const {
-        int compared = compare(other);
-        return compared == 0 || compared == 1;
-    }
-
-    bool BigInteger::operator==(const BigInteger &other) const {
-        return compare(other) == 0;
-    }
-
-    bool BigInteger::operator!=(const BigInteger &other) const {
-        return compare(other) != 0;
-    }
-
-    BigInteger BigInteger::operator/(int other) const {
-        BigInteger res(*this);
-        int carry = 0;
-        for (int i = (int) num.size() - 1; i >= 0; --i) {
-            long long cur = res.num[i] + carry * 1LL * base;
-            res.num[i] = int(cur / other);
-            carry = int(cur % other);
-        }
-        while (res.num.size() > 1 && res.num.back() == 0) {
-            res.num.pop_back();
-        }
-        return res;
-    }
-
-    BigInteger &BigInteger::operator/=(int other) {
-        return *this = *this / other;
-    }
-
-    BigInteger BigInteger::operator/(const BigInteger &other) const {
-        BigInteger a(*this);
-        a.isNegative = false;
-        BigInteger b(other);
-        b.isNegative = false;
-
-        BigInteger l(0);
-        BigInteger r(a);
-        bool sign = isNegative ^ other.isNegative;
-        while (r - l > 1) {
-            BigInteger mid = (l + r) / 2;
-            if (mid * b <= a) {
-                l = mid;
-            } else {
-                r = mid - 1;
-            }
-        }
-        if (r * b <= a) {
-            l = r;
-        }
-        l.isNegative = sign;
-        return l;
-    }
-
-    BigInteger &BigInteger::operator/=(const BigInteger &other) {
-        return *this = *this / other;
-    }
-
-    BigInteger BigInteger::operator%(int other) const {
-        return *this - ((*this / other) * other);
-    }
-
-    BigInteger &BigInteger::operator%=(int other) {
-        return *this = *this % other;
-    }
-
-    BigInteger BigInteger::operator%(const BigInteger &other) const {
-        BigInteger res = *this / other;
-        res = *this - ((res) * other);
-        return res;
-    }
-
-    BigInteger &BigInteger::operator%=(const BigInteger &other) {
-        return *this = *this % other;
-    }
-
     bool BigInteger::is_Negative() const {
         return isNegative;
     }
+
+    BigInteger abs(const BigInteger& a) {
+        BigInteger res(a);
+        res.isNegative = false;
+        return res;
+    }
+
+    int BigInteger::compare(const BigInteger& other) const {
+        int sign = 1;
+        if (isNegative && other.isNegative) {
+            sign = -1;
+        }
+        if (isNegative) { // a < b
+            return -1;
+        }
+        if (other.isNegative) { // a > b
+            return 1;
+        }
+        if (num.size() > other.num.size()) { // a > b
+            return sign;
+        }
+        if (num.size() < other.num.size()) { // a < b
+            return -sign;
+        }
+        for (int i = (int) num.size() - 1; i >= 0; --i) {
+            if (num[i] > other.num[i]) { // a > b
+                return sign;
+            }
+            if (num[i] < other.num[i]) { // a < b
+                return -sign;
+            }
+        }
+        return 0; // a == b
+    }
+
+// Namespace Functions
 
     BigInteger pow(const BigInteger& a, long long n) {
         if (n == 0) {
@@ -343,40 +377,6 @@ namespace BigIntegerLibrary {
             l = r;
         }
         return l;
-    }
-
-    BigInteger abs(const BigInteger& a) {
-        BigInteger res(a);
-        res.isNegative = false;
-        return res;
-    }
-
-    int BigInteger::compare(const BigInteger &other) const {
-        int sign = 1;
-        if (isNegative && other.isNegative) {
-            sign = -1;
-        }
-        if (isNegative) { // a < b
-            return -1;
-        }
-        if (other.isNegative) { // a > b
-            return 1;
-        }
-        if (num.size() > other.num.size()) { // a > b
-            return sign;
-        }
-        if (num.size() < other.num.size()) { // a < b
-            return -sign;
-        }
-        for (int i = (int) num.size() - 1; i >= 0; --i) {
-            if (num[i] > other.num[i]) { // a > b
-                return sign;
-            }
-            if (num[i] < other.num[i]) { // a < b
-                return -sign;
-            }
-        }
-        return 0; // a == b
     }
 
 }

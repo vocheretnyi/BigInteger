@@ -18,77 +18,80 @@ namespace BigIntegerLibrary {
     class BigInteger {
     public:
         //Constructors
+
+        BigInteger();
+
         BigInteger(long long);
 
         BigInteger(string);
 
-        BigInteger(const BigInteger &);
+        BigInteger(const BigInteger&);
 
-        BigInteger &operator=(const BigInteger &);
+        BigInteger& operator=(const BigInteger&);
 
         // Adding
-        BigInteger operator+(const BigInteger &) const;
+        BigInteger operator+(const BigInteger&) const;
 
         BigInteger operator+(long long) const;
 
-        BigInteger &operator+=(const BigInteger &);
+        BigInteger& operator+=(const BigInteger&);
 
-        BigInteger &operator+=(long long);
+        BigInteger& operator+=(long long);
 
         // Subtraction
-        BigInteger operator-(const BigInteger &) const;
+        BigInteger operator-(const BigInteger&) const;
 
         BigInteger operator-(long long) const;
 
-        BigInteger &operator-=(const BigInteger &);
+        BigInteger& operator-=(const BigInteger&);
 
-        BigInteger &operator-=(long long);
+        BigInteger& operator-=(long long);
 
         BigInteger operator-() const; // Unary minus
 
         // Multiplication
-        BigInteger operator*(const BigInteger &) const;
+        BigInteger operator*(const BigInteger&) const;
 
         BigInteger operator*(long long) const;
 
-        BigInteger &operator*=(const BigInteger &);
+        BigInteger& operator*=(const BigInteger&);
 
-        BigInteger &operator*=(long long);
+        BigInteger& operator*=(long long);
 
         // Dividing
         BigInteger operator/(int) const;
 
-        BigInteger &operator/=(int);
+        BigInteger& operator/=(int);
 
-        BigInteger operator/(const BigInteger &) const;
+        BigInteger operator/(const BigInteger&) const;
 
-        BigInteger &operator/=(const BigInteger &);
+        BigInteger& operator/=(const BigInteger&);
 
         BigInteger operator%(int) const;
 
-        BigInteger &operator%=(int);
+        BigInteger& operator%=(int);
 
-        BigInteger operator%(const BigInteger &) const;
+        BigInteger operator%(const BigInteger&) const;
 
-        BigInteger &operator%=(const BigInteger &);
+        BigInteger& operator%=(const BigInteger&);
 
         // Compare
-        bool operator<(const BigInteger &) const;
+        bool operator<(const BigInteger&) const;
 
-        bool operator>(const BigInteger &) const;
+        bool operator>(const BigInteger&) const;
 
-        bool operator<=(const BigInteger &) const;
+        bool operator<=(const BigInteger&) const;
 
-        bool operator>=(const BigInteger &) const;
+        bool operator>=(const BigInteger&) const;
 
-        bool operator==(const BigInteger &) const;
+        bool operator==(const BigInteger&) const;
 
-        bool operator!=(const BigInteger &) const;
+        bool operator!=(const BigInteger&) const;
 
         // Input & Output
-        friend istream &operator>>(istream &, BigInteger &);
+        friend istream& operator>>(istream&, BigInteger&);
 
-        friend ostream &operator<<(ostream &, const BigInteger &);
+        friend ostream& operator<<(ostream&, const BigInteger&);
 
         // Other methods
         string to_string() const;
@@ -110,8 +113,10 @@ namespace BigIntegerLibrary {
         int compare(const BigInteger&) const;
     };
 
+    // power >= 0
     BigInteger pow(const BigInteger&, long long);
 
+    // throw exception if argument < 0
     BigInteger sqrt(const BigInteger&);
 
 }
