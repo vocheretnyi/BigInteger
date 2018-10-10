@@ -1,13 +1,25 @@
-#include <bits/stdc++.h>
+//
+//  main.cpp
+//  BigInteger
+//
+//  Created by Viacheslav Ocheretnyi on 26.09.2018.
+//  Copyright © 2018 Viacheslav Ocheretnyi. All rights reserved.
+//
+
+#include <iostream>
+#include <string>
 #include "BigInteger.h"
 
 using namespace std;
 
 int main() {
-    string s1, s2;
-    cin >> s1 >> s2;
-    BigInteger a(s1), b(s2);
-    a += b;
-    cout << a;
+    BigInteger a(0);
+    cin >> a;
+    try {
+        cout << a.sqrt();
+    } catch (exception &ex) {
+        cout << ex.what() << "/n";
+    }
+    
     return 0;
 }
