@@ -13,67 +13,106 @@
 
 using namespace std;
 
-class BigInteger {
-public:
-    //Constructors
-    BigInteger(long long);
-    BigInteger(string);
-    BigInteger(const BigInteger &);
-    
-    BigInteger& operator=(const BigInteger&);
+namespace BigIntegerLibrary {
 
-    // Adding
-    BigInteger operator+(const BigInteger&) const;
-    BigInteger operator+(long long) const;
-    BigInteger& operator+=(const BigInteger&);
-    BigInteger& operator+=(long long);
+    class BigInteger {
+    public:
+        //Constructors
+        BigInteger(long long);
 
-    // Subtraction
-    BigInteger operator-(const BigInteger&) const;
-    BigInteger operator-(long long) const;
-    BigInteger& operator-=(const BigInteger&);
-    BigInteger& operator-=(long long);
-    BigInteger operator-() const; // Unary minus
+        BigInteger(string);
 
-    // Multiplication
-    BigInteger operator*(const BigInteger&) const;
-    BigInteger operator*(long long) const;
-    BigInteger& operator*=(const BigInteger&);
-    BigInteger& operator*=(long long);
+        BigInteger(const BigInteger &);
 
-    // Dividing
-    BigInteger operator/(int) const;
-    BigInteger& operator/=(int);
-    BigInteger operator/(const BigInteger&) const;
-    BigInteger& operator/=(const BigInteger&);
-    
-    BigInteger operator%(int) const;
-    BigInteger& operator%=(int);
-    BigInteger operator%(const BigInteger&) const;
-    BigInteger& operator%=(const BigInteger&);
+        BigInteger &operator=(const BigInteger &);
 
-    // Compare
-    bool operator<(const BigInteger&) const;
-    bool operator>(const BigInteger&) const;
-    bool operator<=(const BigInteger&) const;
-    bool operator>=(const BigInteger&) const;
-    bool operator==(const BigInteger&) const;
-    bool operator!=(const BigInteger&) const;
-    
-    // Input & Output
-    friend istream& operator>>(istream&, BigInteger&);
-    friend ostream& operator<<(ostream&, const BigInteger&);
+        // Adding
+        BigInteger operator+(const BigInteger &) const;
 
-    // Other methods
-    BigInteger pow(long long) const;
-    BigInteger sqrt() const;
-    string to_string() const;
+        BigInteger operator+(long long) const;
 
-private:
-    vector<int> num;
-    bool isNegative;
-    static const int base = 1e9;
-};
+        BigInteger &operator+=(const BigInteger &);
 
+        BigInteger &operator+=(long long);
 
+        // Subtraction
+        BigInteger operator-(const BigInteger &) const;
+
+        BigInteger operator-(long long) const;
+
+        BigInteger &operator-=(const BigInteger &);
+
+        BigInteger &operator-=(long long);
+
+        BigInteger operator-() const; // Unary minus
+
+        // Multiplication
+        BigInteger operator*(const BigInteger &) const;
+
+        BigInteger operator*(long long) const;
+
+        BigInteger &operator*=(const BigInteger &);
+
+        BigInteger &operator*=(long long);
+
+        // Dividing
+        BigInteger operator/(int) const;
+
+        BigInteger &operator/=(int);
+
+        BigInteger operator/(const BigInteger &) const;
+
+        BigInteger &operator/=(const BigInteger &);
+
+        BigInteger operator%(int) const;
+
+        BigInteger &operator%=(int);
+
+        BigInteger operator%(const BigInteger &) const;
+
+        BigInteger &operator%=(const BigInteger &);
+
+        // Compare
+        bool operator<(const BigInteger &) const;
+
+        bool operator>(const BigInteger &) const;
+
+        bool operator<=(const BigInteger &) const;
+
+        bool operator>=(const BigInteger &) const;
+
+        bool operator==(const BigInteger &) const;
+
+        bool operator!=(const BigInteger &) const;
+
+        // Input & Output
+        friend istream &operator>>(istream &, BigInteger &);
+
+        friend ostream &operator<<(ostream &, const BigInteger &);
+
+        // Other methods
+        string to_string() const;
+
+        bool is_Negative() const;
+
+        friend BigInteger abs(const BigInteger&);
+
+    private:
+        vector<int> num;
+        bool isNegative;
+        static const int base = 1e9;
+
+        /*
+         * a < b return -1
+         * a > b return 1
+         * a == b return 0
+         */
+        int compare(const BigInteger&) const;
+    };
+
+    BigInteger pow(const BigInteger&, long long);
+
+    BigInteger sqrt(const BigInteger&);
+
+}
 #endif //BIGINTEGER_BIGINTEGER_H

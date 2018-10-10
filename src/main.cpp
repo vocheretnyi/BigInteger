@@ -11,15 +11,12 @@
 #include "BigInteger.h"
 
 using namespace std;
+using namespace BigIntegerLibrary;
 
 int main() {
     BigInteger a(0);
     cin >> a;
-    try {
-        cout << a.sqrt();
-    } catch (exception &ex) {
-        cout << ex.what() << "/n";
-    }
+    cout << abs(a);
     
     return 0;
 }
