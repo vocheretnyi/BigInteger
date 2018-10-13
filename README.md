@@ -14,6 +14,7 @@
   * [abs](#absbiginteger)
   * [pow](#powbiginteger-long-long)
   * [sqrt](#sqrtbiginteger)
+  * [gcd](#gcdbiginteger-biginteger)
   
 
 # Description
@@ -86,17 +87,24 @@ string str = a.to_string();
 Absolute value.
 ```C++
 BigIntegerLibrary::BigInteger a(-152);
-cout << abs(a); // 152
+cout << BigIntegerLibrary::abs(a); // 152
 ```
 ## pow(BigInteger, long long)
 Raises to the power of N.
 ```C++
 BigIntegerLibrary::BigIntegert a = 19;
-cout << pow(a, 87); // ~1.784e+111
+cout << BigIntegerLibrary::pow(a, 87); // ~1.784e+111
 ```
 ## sqrt(BigInteger)
 Return the int part of squared root.
 ```C++
 BigIntegerLibrary::BigInteger a = 120;
-cout << sqrt(a); // [~10.954] = 10
+cout << BigIntegerLibrary::sqrt(a); // [~10.954] = 10
+```
+## gcd(BigInteger, BigInteger)
+Return greatest common divisor of abs(a) and abs(b).
+```C++
+BigIntegerLibrary::BigInteger a = -30;
+BigIntegerLibrary::BigInteger b = 12;
+cout << BigIntegerLibrary::gcd(a, b); // gcd(30, 12) = 6
 ```
