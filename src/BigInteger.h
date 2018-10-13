@@ -100,15 +100,17 @@ namespace BigIntegerLibrary {
 
         friend BigInteger abs(const BigInteger&);
 
+        void makePositive();
+
     private:
         vector<int> num;
         bool isNegative;
         static const int base = 1e9;
 
         /*
-         * a < b return -1
-         * a > b return 1
-         * a == b return 0
+         * numerator < denominator return -1
+         * numerator > denominator return 1
+         * numerator == denominator return 0
          */
         int compare(const BigInteger&) const;
     };
@@ -118,6 +120,11 @@ namespace BigIntegerLibrary {
 
     // throw exception if argument < 0
     BigInteger sqrt(const BigInteger&);
+
+    // find gcd of abs(a) and abs(b)
+    BigInteger gcd(BigInteger, BigInteger);
+
+    const BigInteger zero(0);
 
 }
 #endif //BIGINTEGER_BIGINTEGER_H

@@ -155,7 +155,7 @@ namespace BigIntegerLibrary {
         res.isNegative ^= true;
         return res;
     }
-    
+
 // Multiplication
 
     BigInteger BigInteger::operator*(const BigInteger& other) const {
@@ -320,27 +320,31 @@ namespace BigIntegerLibrary {
         if (isNegative && other.isNegative) {
             sign = -1;
         }
-        if (isNegative) { // a < b
+        if (isNegative) { // numerator < denominator
             return -1;
         }
-        if (other.isNegative) { // a > b
+        if (other.isNegative) { // numerator > denominator
             return 1;
         }
-        if (num.size() > other.num.size()) { // a > b
+        if (num.size() > other.num.size()) { // numerator > denominator
             return sign;
         }
-        if (num.size() < other.num.size()) { // a < b
+        if (num.size() < other.num.size()) { // numerator < denominator
             return -sign;
         }
         for (int i = (int) num.size() - 1; i >= 0; --i) {
-            if (num[i] > other.num[i]) { // a > b
+            if (num[i] > other.num[i]) { // numerator > denominator
                 return sign;
             }
-            if (num[i] < other.num[i]) { // a < b
+            if (num[i] < other.num[i]) { // numerator < denominator
                 return -sign;
             }
         }
-        return 0; // a == b
+        return 0; // numerator == denominator
+    }
+
+    void BigInteger::makePositive() {
+        isNegative = false;
     }
 
 // Namespace Functions
@@ -377,6 +381,19 @@ namespace BigIntegerLibrary {
             l = r;
         }
         return l;
+    }
+
+    BigInteger gcd(BigInteger a, BigInteger b) {
+        a = abs(a);
+        b = abs(b);
+        while (a > BigIntegerLibrary::zero && b > BigIntegerLibrary::zero) {
+            if (a > b) {
+                a %= b;
+            } else {
+                b %= a;
+            }
+        }
+        return a + b;
     }
 
 }
