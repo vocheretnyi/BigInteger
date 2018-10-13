@@ -152,7 +152,9 @@ namespace BigIntegerLibrary {
 
     BigInteger BigInteger::operator-() const {
         BigInteger res(*this);
-        res.isNegative ^= true;
+        if (res != zero) {
+            res.isNegative ^= true;
+        }
         return res;
     }
 
@@ -217,7 +219,7 @@ namespace BigIntegerLibrary {
 
         BigInteger l(0);
         BigInteger r(a);
-        bool sign = isNegative ^other.isNegative;
+        bool sign = isNegative ^ other.isNegative;
         while (r - l > 1) {
             BigInteger mid = (l + r) / 2;
             if (mid * b <= a) {
