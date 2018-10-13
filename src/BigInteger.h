@@ -108,9 +108,9 @@ namespace BigIntegerLibrary {
         static const int base = 1e9;
 
         /*
-         * numerator < denominator return -1
-         * numerator > denominator return 1
-         * numerator == denominator return 0
+         * a < b return -1
+         * a > b return 1
+         * a == b return 0
          */
         int compare(const BigInteger&) const;
     };

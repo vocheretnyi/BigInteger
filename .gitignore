@@ -26,7 +26,7 @@ cmake-build-debug/*
 # Compiled Static libraries
 *.lai
 *.la
-*.numerator
+*.a
 *.lib
 
 # Executables

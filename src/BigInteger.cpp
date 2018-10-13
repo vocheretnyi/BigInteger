@@ -320,27 +320,27 @@ namespace BigIntegerLibrary {
         if (isNegative && other.isNegative) {
             sign = -1;
         }
-        if (isNegative) { // numerator < denominator
+        if (isNegative) { // a < b
             return -1;
         }
-        if (other.isNegative) { // numerator > denominator
+        if (other.isNegative) { // a > b
             return 1;
         }
-        if (num.size() > other.num.size()) { // numerator > denominator
+        if (num.size() > other.num.size()) { // a > b
             return sign;
         }
-        if (num.size() < other.num.size()) { // numerator < denominator
+        if (num.size() < other.num.size()) { // a < b
             return -sign;
         }
         for (int i = (int) num.size() - 1; i >= 0; --i) {
-            if (num[i] > other.num[i]) { // numerator > denominator
+            if (num[i] > other.num[i]) { // a > b
                 return sign;
             }
-            if (num[i] < other.num[i]) { // numerator < denominator
+            if (num[i] < other.num[i]) { // a < b
                 return -sign;
             }
         }
-        return 0; // numerator == denominator
+        return 0; // a == b
     }
 
     void BigInteger::makePositive() {
