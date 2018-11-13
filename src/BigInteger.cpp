@@ -322,10 +322,10 @@ namespace BigIntegerLibrary {
         if (isNegative && other.isNegative) {
             sign = -1;
         }
-        if (isNegative) { // a < b
+        if (isNegative && !other.isNegative) { // a < b
             return -1;
         }
-        if (other.isNegative) { // a > b
+        if (other.isNegative && !isNegative) { // a > b
             return 1;
         }
         if (num.size() > other.num.size()) { // a > b
@@ -349,20 +349,39 @@ namespace BigIntegerLibrary {
         isNegative = false;
     }
 
+    long long BigInteger::to_long() const {
+        string s = to_string();
+        return stoi(s);
+    }
+
 // Namespace Functions
 
-    BigInteger pow(const BigInteger& a, long long n) {
+    BigInteger pow(const BigInteger& a, const BigInteger& n) {
         if (n == 0) {
             return BigInteger(1);
         }
         if (n == 1) {
             return a;
         }
-        if (n & 1LL) {
+        if (n % 2 == 1) {
             return pow(a, n - 1) * a;
         }
-        BigInteger tmp = pow(a, n >> 1LL);
+        BigInteger tmp = pow(a, n / 2);
         return tmp * tmp;
+    }
+
+    BigInteger powm(const BigInteger& a, const BigInteger& n, const BigInteger& mod) {
+        if (n == 0) {
+            return BigInteger(1) % mod;
+        }
+        if (n == 1) {
+            return a % mod;
+        }
+        if (n % 2 == 1) {
+            return (powm(a, n - 1, mod) * a) % mod;
+        }
+        BigInteger tmp = powm(a, n / 2, mod);
+        return (tmp * tmp) % mod;
     }
 
     BigInteger sqrt(const BigInteger& a) {
@@ -396,6 +415,19 @@ namespace BigIntegerLibrary {
             }
         }
         return a + b;
+    }
+
+    BigInteger gcdex(BigInteger a, BigInteger b, BigInteger& x, BigInteger& y) {
+        if (a == zero) {
+            x = zero;
+            y = BigInteger(1);
+            return b;
+        }
+        BigInteger x1, y1;
+        BigInteger d = gcdex(b % a, a, x1, y1);
+        x = y1 - (b / a) * x1;
+        y = x1;
+        return d;
     }
 
 }

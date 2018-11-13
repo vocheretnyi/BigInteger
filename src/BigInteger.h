@@ -96,6 +96,8 @@ namespace BigIntegerLibrary {
         // Other methods
         string to_string() const;
 
+        long long to_long() const;
+
         bool is_Negative() const;
 
         friend BigInteger abs(const BigInteger&);
@@ -116,13 +118,19 @@ namespace BigIntegerLibrary {
     };
 
     // power >= 0
-    BigInteger pow(const BigInteger&, long long);
+    BigInteger pow(const BigInteger&, const BigInteger&);
+
+    // a^b mod m
+    BigInteger powm(const BigInteger&, const BigInteger&, const BigInteger&);
 
     // throw exception if argument < 0
     BigInteger sqrt(const BigInteger&);
 
     // find gcd of abs(a) and abs(b)
     BigInteger gcd(BigInteger, BigInteger);
+
+    // ax + by = gcd
+    BigInteger gcdex(BigInteger, BigInteger, BigInteger&, BigInteger&);
 
     const BigInteger zero(0);
 
